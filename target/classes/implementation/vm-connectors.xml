@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<flow name="vm-connectorsFlow" doc:id="055e5fb5-4600-4165-8d10-6859ac654565" >
+		<foreach doc:name="For Each" doc:id="a7902c2a-ab85-496a-9c70-a44ef0e30b39" collection="#[payload.Employees]">
+			<vm:publish doc:name="Publish" doc:id="bd2e5ec0-5ec0-4398-bf63-5899f1749772" config-ref="VM_Config" sendCorrelationId="ALWAYS" queueName="vmconnector" />
+		</foreach>
+	</flow>
+	<flow name="vm-connectorsFlow1" doc:id="2c22b584-0a1b-4945-bfe5-71ef9cf25169" >
+		<vm:listener doc:name="Listener" doc:id="d9aa4ae0-d218-4059-82ef-742c6ce14ee2" config-ref="VM_Config" numberOfConsumers="1" queueName="vmconnector" transactionalAction="ALWAYS_BEGIN" primaryNodeOnly="true">
+			<reconnect />
+		</vm:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="6a8d72cc-c7b9-487f-9991-b85d3f588b25" message="#[payload]"/>
+	</flow>
+	
+</mule>
